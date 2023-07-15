@@ -20,7 +20,7 @@ export const Footer = () => {
       }}
     >
       <Typography variant="body1" component="p" sx={{ mr: 4 }}>
-        © 2023 Developed by Oleksandr Mukhin
+        © 2023 | Developed by Oleksandr Mukhin
       </Typography>
       <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
         <MuiLink
