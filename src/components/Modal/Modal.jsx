@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateContact, fetchContacts } from '../../redux/operations';
+import { updateContact } from '../../redux/operations';
 import { getToUpdate } from '../../redux/selectors';
 import { Modal, TextField, Grid, Box } from '@mui/material';
 import Button from '@mui/material/Button';
+import { createPortal } from 'react-dom';
+
+const rootModalRef = document.querySelector('#modal');
 
 export const EditForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const editingContact = useSelector(getToUpdate);
-  
+
   const [name, setName] = useState(editingContact.name);
   const [number, setNumber] = useState(editingContact.number);
 
-  const handleEditForm = (evt) => {
+  const handleEditForm = evt => {
     evt.preventDefault();
     dispatch(
       updateContact({
@@ -21,7 +24,7 @@ export const EditForm = ({ onClose }) => {
         number: number,
       })
     );
-    dispatch(fetchContacts());
+    // dispatch(fetchContacts());
     onClose();
   };
 
@@ -32,14 +35,14 @@ export const EditForm = ({ onClose }) => {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid', 
-    borderColor: 'primary.main', 
-    borderRadius: '8px', 
+    border: '2px solid',
+    borderColor: 'primary.main',
+    borderRadius: '8px',
     boxShadow: 24,
     p: 4,
   };
 
-  return (
+  return createPortal(
     <Modal open={true} onClose={onClose}>
       <Grid container direction="column" spacing={2} sx={style}>
         <Grid item>
@@ -48,7 +51,7 @@ export const EditForm = ({ onClose }) => {
             variant="outlined"
             fullWidth
             value={name}
-            onChange={(evt) => setName(evt.target.value)}
+            onChange={evt => setName(evt.target.value)}
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
@@ -61,7 +64,7 @@ export const EditForm = ({ onClose }) => {
             variant="outlined"
             fullWidth
             value={number}
-            onChange={(evt) => setNumber(evt.target.value)}
+            onChange={evt => setNumber(evt.target.value)}
             name="number"
             type="tel"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -71,15 +74,26 @@ export const EditForm = ({ onClose }) => {
         </Grid>
         <Grid item>
           <Box display="flex" justifyContent="space-between">
-            <Button type="submit" variant="contained" color="primary" onClick={handleEditForm}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={handleEditForm}
+            >
               Update
             </Button>
-            <Button type="button" variant="contained" color="secondary" onClick={onClose}>
+            <Button
+              type="button"
+              variant="contained"
+              color="secondary"
+              onClick={onClose}
+            >
               Cancel
             </Button>
           </Box>
         </Grid>
       </Grid>
-    </Modal>
+    </Modal>,
+    rootModalRef
   );
 };
